@@ -31,8 +31,10 @@
 
 class Game {
     var $position;
+    var $newposition;
     function __construct($squares) {
         $this->position = str_split($squares);
+        $this->display();
     }
 
     function winner($token) {
@@ -64,5 +66,29 @@ class Game {
         }
 
         return $won;
+    }
+
+    function display() {
+        echo '<table cols="3" style="font-size:large; font-weight:bold">';
+        echo '<tr>'; // open first row
+        for($pos=0; $pos<9; $pos++) {
+            echo $this->show_cell($pos);
+            if($pos %3 == 2) echo '</tr><tr>'; // start new row
+        }
+        echo '</tr>'; // close last row
+        echo '</table>';
+    }
+
+    function show_cell($which) {
+        $token = $this->position[$which];
+        // easy case
+        if($token != '-') return '<td>' . $token . '</td>';
+        // hard case
+        $this->newposition = $this->position; // copy original
+        $this->newposition[$which] = 'o'; // their move
+        $move = implode($this->newposition); // make string from array
+        $link = 'http://localhost:4711/comp4711/COMP4711/?board=' . $move; // what we want link to be
+        // return cell containing anchor and showing hyphen
+        return '<td><a href="' . $link . '">-</a></td>';
     }
 }
