@@ -27,31 +27,23 @@
 <?php
 function winner($token, $position) {
     $won = false;
-    if( ($position[0] == $token) &&
-        ($position[1] == $token) &&
-        ($position[2] == $token)) {
-        $won = true;
-    } else if (($position[3] == $token) &&
-        ($position[4] == $token) &&
-        ($position[5] == $token)) {
-        $won = true;
-    } else if (($position[6] == $token) &&
-        ($position[7] == $token) &&
-        ($position[8] == $token)) {
-        $won = true;
-    } else if (($position[0] == $token) &&
-        ($position[3] == $token) &&
-        ($position[6] == $token)) {
-        $won = true;
-    } else if (($position[1] == $token) &&
-        ($position[4] == $token) &&
-        ($position[7] == $token)) {
-        $won = true;
-    } else if (($position[2] == $token) &&
-        ($position[5] == $token) &&
-        ($position[8] == $token)) {
-        $won = true;
-    } else if (($position[0] == $token) &&
+
+    // horizontals:
+    for($row = 0; $row < 3; $row++) {
+        if(($position[3 * $row] == $token) && ($position[3 * $row + 1] == $token) && ($position[3 * $row + 2] == $token)){
+            $won = true;
+        }
+    }
+
+    //verticals:
+    for($col = 0; $col < 3; $col++) {
+        if(($position[1 * $col] == $token) && ($position[1 * $col + 3] == $token) && ($position[1 * $col + 6] == $token)){
+            $won = true;
+        }
+    }
+
+    //diagonals:
+    if (($position[0] == $token) &&
         ($position[4] == $token) &&
         ($position[8] == $token)) {
         $won = true;
@@ -60,5 +52,6 @@ function winner($token, $position) {
         ($position[6] == $token)) {
         $won = true;
     }
+
     return $won;
 }
