@@ -16,42 +16,53 @@
             die("Must set board");
         }
         $position = $_GET['board'];
-        $squares = str_split($position);
 
-        if(winner('x', $squares)) echo 'You win!';
-        else if(winner('o', $squares)) echo 'I win!';
-        else echo 'No winner yet...';
+        $game = new Game($position);
+        if ($game->winner('x'))
+            echo 'You win. Lucky guesses!';
+        else if ($game->winner('o'))
+            echo 'I win. Muahahahahahahahaha';
+        else
+            echo 'No winner yet, but you are losing.';
     ?>
     </body>
 </html>
 <?php
-function winner($token, $position) {
-    $won = false;
 
-    // horizontals:
-    for($row = 0; $row < 3; $row++) {
-        if(($position[3 * $row] == $token) && ($position[3 * $row + 1] == $token) && ($position[3 * $row + 2] == $token)){
+class Game {
+    var $position;
+    function __construct($squares) {
+        $this->position = str_split($squares);
+    }
+
+    function winner($token) {
+        $won = false;
+
+        // horizontals:
+        for($row = 0; $row < 3; $row++) {
+            if(($this->position[3 * $row] == $token) && ($this->position[3 * $row + 1] == $token) && ($this->position[3 * $row + 2] == $token)){
+                $won = true;
+            }
+        }
+
+        //verticals:
+        for($col = 0; $col < 3; $col++) {
+            if(($this->position[1 * $col] == $token) && ($this->position[1 * $col + 3] == $token) && ($this->position[1 * $col + 6] == $token)){
+                $won = true;
+            }
+        }
+
+        //diagonals:
+        if (($this->position[0] == $token) &&
+            ($this->position[4] == $token) &&
+            ($this->position[8] == $token)) {
+            $won = true;
+        } else if (($this->position[2] == $token) &&
+            ($this->position[4] == $token) &&
+            ($this->position[6] == $token)) {
             $won = true;
         }
-    }
 
-    //verticals:
-    for($col = 0; $col < 3; $col++) {
-        if(($position[1 * $col] == $token) && ($position[1 * $col + 3] == $token) && ($position[1 * $col + 6] == $token)){
-            $won = true;
-        }
+        return $won;
     }
-
-    //diagonals:
-    if (($position[0] == $token) &&
-        ($position[4] == $token) &&
-        ($position[8] == $token)) {
-        $won = true;
-    } else if (($position[2] == $token) &&
-        ($position[4] == $token) &&
-        ($position[6] == $token)) {
-        $won = true;
-    }
-
-    return $won;
 }
