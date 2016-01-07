@@ -18,12 +18,6 @@
         $position = $_GET['board'];
 
         $game = new Game($position);
-        if ($game->winner('x'))
-            echo 'You win. Lucky guesses!';
-        else if ($game->winner('o'))
-            echo 'I win. Muahahahahahahahaha';
-        else
-            echo 'No winner yet, but you are losing.';
     ?>
     </body>
 </html>
@@ -34,6 +28,8 @@ class Game {
     var $newposition;
     function __construct($squares) {
         $this->position = str_split($squares);
+        // pick move before displaying
+        $this->pick_move();
         $this->display();
     }
 
@@ -85,10 +81,30 @@ class Game {
         if($token != '-') return '<td>' . $token . '</td>';
         // hard case
         $this->newposition = $this->position; // copy original
-        $this->newposition[$which] = 'o'; // their move
+        $this->newposition[$which] = 'x'; // their move
         $move = implode($this->newposition); // make string from array
         $link = 'http://localhost:4711/comp4711/COMP4711/?board=' . $move; // what we want link to be
         // return cell containing anchor and showing hyphen
         return '<td><a href="' . $link . '">-</a></td>';
+    }
+
+    function pick_move(){
+        if ($this->winner('x'))
+            echo 'You win. Lucky guesses!';
+        else if ($this->winner('o'))
+            echo 'I win. Muahahahahahahahaha';
+        else {
+            // pick move
+            for($pos = 0; $pos < 9; $pos++){
+                if($this->position[$pos] == '-'){
+                    $this->position[$pos] = 'o';
+                    break;
+                }
+            }
+            if ($this->winner('o'))
+                echo 'I win. Muahahahahahahahaha';
+            else
+                echo 'No winner yet, but you are losing.';
+        }
     }
 }
